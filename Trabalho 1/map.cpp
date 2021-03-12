@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <map>
+#include <string>
 
 using namespace std;
 
@@ -8,7 +9,7 @@ int main()
 {
   ifstream arquivo_entrada;
   string linha;
-  arquivo_entrada.open("../arquivos_testes/bin.asm");
+  arquivo_entrada.open("teste1-entrada.asm");
   
   // Criação de um container dec chave-valor com o map.
   map<int, string>programa_mapeado;
