@@ -1,7 +1,8 @@
 #include <iostream>
 #include <fstream>
-#include <string>
-#include "../libraries/format_file.h"
+//#include <string>
+#include "../include/format_file.h"
+#include "../include/utilities.h"
 
 int main(int argc, char *argv[]) {
 
@@ -17,6 +18,7 @@ int main(int argc, char *argv[]) {
         if (filename.find(".asm") != string::npos) {
 
             cout << filename << endl;
+            
 
         } else if (filename.find(".obj") != string::npos) {
 
