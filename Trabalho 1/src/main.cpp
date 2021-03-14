@@ -5,7 +5,7 @@
 #include "../include/utilities.h"
 
 int main(int argc, char *argv[]) {
-
+    
     string filename;
     if (argc != 2) {
 
