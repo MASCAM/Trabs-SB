@@ -12,6 +12,6 @@ map <string, vector<int>> getInstructionsTable();
 
 map <string, vector<int>> getDirectivesTable();
 
-vector <string > split(string line, string delimiter);
+vector <string > split(vector<string > sentences, string delimiter, bool &foundr);
 
 #endif

@@ -29,14 +29,17 @@ int main(int argc, char *argv[]) {
         if (filename.find(".asm") != string::npos) {
 
             filename_aux = formatFile(filename, original_filer);
-            map <string, int> teste = getSymbolsTable(filename, filename_aux, errorsr, linesr);
-            cout << original_file->at(0) << endl;
+            map <string, int> teste = getSymbolsTable(filename_aux, errorsr, linesr, original_filer);
+            if (errorsr.size() > 0) {
+
+                for (size_t i = 0; i < errorsr.size(); i++) {
+
+                    cout << errorsr[i] << endl;
+
+                }
+
+            }
             
-
-        } else if (filename.find(".obj") != string::npos) {
-
-            cout << filename << endl;
-
         } else {
 
             cout << "Arquivo de entrada com extensao invalida" << "\n";

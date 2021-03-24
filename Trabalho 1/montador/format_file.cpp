@@ -37,7 +37,7 @@ string formatFile(string filename, vector <string > &original_filer) {
                     line.erase(line.begin() + j, line.end());
 
                 }
-                if (line[j] == ' ' && line[j + 1] == '\n') {
+                if (line[j] == ' ' && j + 2 == line.length()) {
 
                     line.erase(line.begin() + j);
                     j--;
