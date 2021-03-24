@@ -38,3 +38,19 @@ map <string, vector<int>> getDirectivesTable() {
     return directives;
 
 }
+
+vector <string > split(string line, string delimiter) { //função split semelhante à encontrada em javascript
+
+    string word = "";
+    vector <string > words = {};
+    size_t pos;
+    while ((pos = line.find(delimiter)) != string::npos) {
+
+        word = line.substr(0, pos);
+        line.erase(0, pos + delimiter.length());
+        words.push_back(word);
+
+    }
+    return words;
+
+}

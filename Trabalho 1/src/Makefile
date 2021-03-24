@@ -1,5 +1,5 @@
 # Specify the final target name
-EXE := AAAAAAAAAAAAAAAA
+EXE := montador
 
 # Specify the source files
 # Effectively list all source files in the current directory
@@ -40,8 +40,11 @@ $(EXE): $(OBJ)
 	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 # Let's clean up the mess
+
 clean:
 	$(RM) $(EXE) $(OBJ) $(DEP)
+	rm	-f	*.d	*.o
 
 # Don't forget to include the dependency files to let make know when to recompile
 -include $(DEP)
+

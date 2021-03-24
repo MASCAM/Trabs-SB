@@ -6,10 +6,15 @@
 
 using namespace std;
 
-word_t::word_t(string line, int line_position) {
+line_of_words_t::line_of_words_t(string line, int line_position) {
 
-  this->word = line;
-  this->line_position = line_position;
+  this->lines_in_original_file.push_back(line_position);
+
+}
+
+void line_of_words_t::add_line(string line) {
+
+  this->line_position = 1;
 
 }
 

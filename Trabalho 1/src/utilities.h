@@ -12,4 +12,6 @@ map <string, vector<int>> getInstructionsTable();
 
 map <string, vector<int>> getDirectivesTable();
 
+vector <string > split(string line, string delimiter);
+
 #endif

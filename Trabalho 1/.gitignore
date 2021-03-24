@@ -1,0 +1,11 @@
+*.d
+!spec/*.d
+
+*.o
+!spec/*.o
+
+montador.exe
+!spec/montador.exe
+
+include/
+input/

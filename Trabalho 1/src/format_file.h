@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -8,7 +9,7 @@ using namespace std;
 
 
 
-string formatFile(string filename);
+string formatFile(string filename, vector <string > &original_filer);
 
 
 #endif
