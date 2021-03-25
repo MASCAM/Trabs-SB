@@ -15,7 +15,7 @@ class word_t {
         string word;
         int line_position;
         bool is_label;
-        bool validate_char(char c, int position);
+        void validate_word(int line_position, vector <string > &original_filer, vector <string > &errorsr);
 
     };
 

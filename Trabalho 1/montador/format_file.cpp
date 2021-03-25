@@ -12,12 +12,14 @@ string formatFile(string filename, vector <string > &original_filer) {
     fstream file;
     string line;
     int i = 0;
+    vector <string > formatted_lines;
     //int section_text_position = 0;
     file.open(filename);                //abre o arquivo que foi passado como argumento
     if (file.is_open() != false) {
 
         while (getline(file, line)) {
 
+            original_filer.push_back(line);
             for (size_t j = 0; j < line.length(); j++) {
 
                 if (line[j] == ' ' && line[j + 1] == ' ') { //remove espaços repetidos
@@ -37,12 +39,6 @@ string formatFile(string filename, vector <string > &original_filer) {
                     line.erase(line.begin() + j, line.end());
 
                 }
-                if (line[j] == ' ' && j + 2 == line.length()) {
-
-                    line.erase(line.begin() + j);
-                    j--;
-
-                }
                 line[j] = toupper(line[j]); //coloca tudo em caixa-alta
 
             }
@@ -51,12 +47,12 @@ string formatFile(string filename, vector <string > &original_filer) {
                 section_text_position = i;
 
             }*/
-            original_filer.push_back(line); //retorna para o vetor de linhas
+            formatted_lines.push_back(line); //retorna para o vetor de linhas
             i++;
 
         }
 
-    } else {
+    } else { //caso o arquivo seja inválido
 
         cout << "Nao foi possivel abrir o arquivo especificado." << "\n";
         return "FAILED";
@@ -76,9 +72,9 @@ string formatFile(string filename, vector <string > &original_filer) {
         file_aux << lines_from_file[l] + "\n";
 
     }*/
-    for (size_t k = 0; k < original_filer.size(); k++) { //coloca o section text primeiro num arquivo de sa´´ida
+    for (size_t k = 0; k < formatted_lines.size(); k++) { //coloca as linhas num arquivo de saída
 
-        file_aux << original_filer[k] + "\n";
+        file_aux << formatted_lines[k] + "\n";
 
     }
     file_aux.close();

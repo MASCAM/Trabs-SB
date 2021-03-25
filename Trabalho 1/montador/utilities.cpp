@@ -6,7 +6,7 @@
 
 using namespace std;
 
-map <string, vector<int>> getInstructionsTable() {
+map <string, vector<int>> get_instructions_table() {
     //retorna uma estrutura mapeada de instruções na qual estão especificadas o nome da instrução em sua chave
     //e os valores correspondentes ao código da instrução e seu tamanho em palavras
     map <string, vector<int>> instructions;
@@ -28,8 +28,7 @@ map <string, vector<int>> getInstructionsTable() {
 
 }
 
-
-map <string, vector<int>> getDirectivesTable() {
+map <string, vector<int>> get_directives_table() {
     //retorna uma estrutura mapeada de dieretivas cujos nomes estão especificados nas chaves
     //os valores dentro de cada chave correspondem respectivamente ao número de operandos e ao número de espaços de memória reservados
     map <string, vector<int>> directives;
@@ -39,36 +38,42 @@ map <string, vector<int>> getDirectivesTable() {
 
 }
 
-vector <string > split(vector<string > sentences, string delimiter, bool &foundr) { //função split semelhante à encontrada em javascript
+vector <string > split(vector<string > sentences, string delimiter, int &foundr) { //função split semelhante à encontrada em javascript
 
     string word = "";
     string sentence = "";
     size_t i = 0;
     vector <string > words = {};
     size_t pos;
-    for (i = 0; i < sentences.size(); i++) {
+    for (i = 0; i < sentences.size(); i++) { //pode receber várias palavras
 
         sentence = sentences[i];
-        while ((pos = sentence.find(delimiter)) != string::npos) {
+        while ((pos = sentence.find(delimiter)) != string::npos) { //enquanto achar o caractere delimitador
 
-            foundr = true;
-            word = sentence.substr(0, pos);
-            sentence.erase(0, pos + delimiter.length());
+            foundr++;
+            word = sentence.substr(0, pos);                     //pega a palavra do início até o delimitador
+            sentence.erase(0, pos + delimiter.length());        //apaga o delimitador
             words.push_back(word);
 
         }
-        if (sentence != "" && sentence != " " && sentence != "\n") {
+        if (sentence != "" && sentence != " " && sentence != "\n") {    //se a palavra que restou não for vazia, a guarda
 
             words.push_back(sentence);
 
         }
 
     }
-    if (words.size() == 0) {
+    if (words.size() == 0) {        //caso não encontre o delimitador simplesmente retorna o que foi passado anteriormente 
 
         words = sentences;
 
     }
     return words;
+
+}
+
+bool is_number(const string s) { //função que retorna se a string especificada é um número
+
+    return (!s.empty() && s.find_first_not_of("0123456789") == string::npos);
 
 }

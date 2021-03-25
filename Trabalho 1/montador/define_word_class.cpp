@@ -17,60 +17,100 @@ void line_of_words_t::add_line(string line, int line_position, vector <string > 
 
   //this->lines_in_original_file.push_back(line_position);
   vector <string > words;
-  bool *found = new bool;
-  bool &foundr = *found;
+  word_t word;
+  word.is_label = false;
+  //bool validate_word = false;
+  int *found = new int;
+  int &foundr = *found;
+  foundr = 0;
   string erro = "";
   words.push_back(line); 
   words = split(words, ":", foundr);
-  if (foundr == true) {
+  if (foundr != 0) {  //se existe label
 
-    foundr = false;
+    word.is_label = true;
+    if (foundr > 1) { //se há mais de uma é erro
 
-  }
-  words = split(words, " ", foundr);
-  for (size_t i = 0; i < words.size(); i++) {
-
-    /*if (words[i] == "" || words[i] == " " || words[i] == "\n") {
-
-      words.erase(words.begin() + i);
-
-    } else*/ if (words[i].length() > 50) {
-
-      erro = "ERRO LEXICO NA LINHA " + to_string(line_position + 1) + ":\n"  + original_filer[line_position] + "\n" + "PALAVRA POSSUI MAIS DE 50 CARACATERES";
+      erro = "ERRO SINTATICO NA LINHA " + to_string(line_position + 1) + ":\n"  + original_filer[line_position] + "\n" + "DUPLA DECLARACAO DE ROTULO OU ':' DUPLICADO";
       errorsr.push_back(erro);
 
     }
 
   }
+  foundr = 0;
+  words = split(words, " ", foundr);
+  for (size_t i = 0; i < words.size(); i++) { //para todas as palvras encontradas numa linha
+
+    if (words[i].find_first_not_of(' ') == string::npos) { //se for vazia pula
+
+      continue;
+
+    }
+    word.word = words[i];
+    /*if (words[i] == "" || words[i] == " " || words[i] == "\n") {
+
+      words.erase(words.begin() + i);
+
+    } else*/ 
+    if (word.word.length() > 50) { // se tem mais de 50 caracteres é erro
+
+      erro = "ERRO LEXICO NA LINHA " + to_string(line_position + 1) + ":\n"  + original_filer[line_position] + "\n" + "PALAVRA POSSUI MAIS DE 50 CARACATERES";
+      errorsr.push_back(erro);
+
+    } else {
+
+      if (!is_number(word.word)) { //se não é um número
+
+        word.validate_word(line_position, original_filer, errorsr);
+
+      }
+
+
+    }
+    word.line_position = line_position;
+    //cout << to_string(word.line_position + 1) << ", " << word.word << ", "<< to_string(word.is_label) << endl;
+    this->line.push_back(word);
+    word.is_label = false;
+
+  }
 
 }
 
-bool word_t::validate_char(char c, int position) {
+void word_t::validate_word(int line_position, vector <string > &original_filer, vector <string > &errorsr) {
 
-  if (position == 0) {
+  string erro;
+  //bool validate_word = true;
+  for (size_t position = 0; position < word.length(); position++) {
 
-    if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c == '_')) {
+    if (position == 0) {
 
-      return true;
+      if ((word[position] >= 'a' && word[position] <= 'z') || (word[position] >= 'A' && word[position] <= 'Z') || (word[position] == '_')) {
+
+        continue;
+
+      } else {
+
+        erro = "ERRO LEXICO NA LINHA " + to_string(line_position + 1) + ":\n"  + original_filer[line_position] + "\n" + "CARACTERE INVALIDO NO INICIO DA PALAVRA";
+        errorsr.push_back(erro);
+
+      }
 
     } else {
 
-      return false;
+      if ((word[position] >= 'a' && word[position] <= 'z') || (word[position] >= 'A' && word[position] <= 'Z') || (word[position] == '_') || (word[position] >= '0' && word[position] <= '9') || (word[position] == ',')) {
 
-    }
+        continue;
 
-  } else {
+      } else {
 
-    if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c == '_') || (c >= '0' && c <= '9')) {
+        erro = "ERRO LEXICO NA LINHA " + to_string(line_position + 1) + ":\n"  + original_filer[line_position] + "\n" + "CARACTERE INVALIDO NO MEIO DA PALAVRA";
+        errorsr.push_back(erro);
 
-      return true;
-
-    } else {
-
-      return false;
+      }
 
     }
 
   }
+  //return validate_word;
 
 }

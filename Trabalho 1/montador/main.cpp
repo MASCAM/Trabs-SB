@@ -29,12 +29,17 @@ int main(int argc, char *argv[]) {
         if (filename.find(".asm") != string::npos) {
 
             filename_aux = formatFile(filename, original_filer);
-            map <string, int> teste = getSymbolsTable(filename_aux, errorsr, linesr, original_filer);
+            map <string, int> symbols_table = get_symbols_table(filename_aux, errorsr, linesr, original_filer);
+            for (map<string, int>::const_iterator it = symbols_table.begin(); it != symbols_table.end(); ++it) {
+
+                std::cout << it->first << " " << to_string(it->second) << "\n";
+
+            }
             if (errorsr.size() > 0) {
 
                 for (size_t i = 0; i < errorsr.size(); i++) {
 
-                    cout << errorsr[i] << endl;
+                    cout << errorsr[i] << endl << endl;
 
                 }
 
