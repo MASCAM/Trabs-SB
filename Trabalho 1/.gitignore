@@ -1,11 +1,13 @@
 *.d
 !spec/*.d
 
+test.cpp
+!spec/test.cpp
+
 *.o
 !spec/*.o
 
 montador.exe
 !spec/montador.exe
 
-include/
 input/
