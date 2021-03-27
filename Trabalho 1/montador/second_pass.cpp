@@ -90,18 +90,41 @@ string create_object_string(map <string, int> symbols_table, vector <string > &e
 
                         if (directives[linesr[i].line[j].word][0] == 0) { //se for SPACE reserva 0 no codigo objeto
 
-                            object_code.push_back(0);
-                            break;
+                            if (j + 1 < linesr[i].line.size()) { //se houver mais operandos que o desejado
+
+                                erro = "ERRO SINTATICO NA LINHA " + to_string(linesr[i].line[j].line_position + 1) + ":\n"  + original_filer[linesr[i].line[j].line_position] + "\n" + "NUMERO DE OPERANDOS MAIOR DO QUE O ESPERADO";
+                                errorsr.push_back(erro);
+                                break;
+
+                            }  else {
+
+                                object_code.push_back(0);
+                                break;
+
+                            }
+
 
                         } else if (directives[linesr[i].line[j].word][0] == 1) { //se for CONST grava a constante no código objeto
 
-                            if (is_number(linesr[i].line[j + 1].word)) {
+                            if (j + 2 < linesr[i].line.size()) { //se houver mais operandos que o desejado
+
+                                erro = "ERRO SINTATICO NA LINHA " + to_string(linesr[i].line[j].line_position + 1) + ":\n"  + original_filer[linesr[i].line[j].line_position] + "\n" + "NUMERO DE OPERANDOS MAIOR DO QUE O ESPERADO";
+                                errorsr.push_back(erro);
+                                break;
+
+                            } else if (j + 2 > linesr[i].line.size()) { //se houver menos operandos que o desejado
+
+                                erro = "ERRO SINTATICO NA LINHA " + to_string(linesr[i].line[j].line_position + 1) + ":\n"  + original_filer[linesr[i].line[j].line_position] + "\n" + "NUMERO DE OPERANDOS MENOR DO QUE O ESPERADO";
+                                errorsr.push_back(erro);
+                                break;
+
+                            } else if (is_number(linesr[i].line[j + 1].word)) {
 
                                 object_code.push_back(atoi(linesr[i].line[j + 1].word.c_str())); //converte de string pra int
 
                             } else {
 
-                                erro = "ERRO LEXICO NA LINHA " + to_string(linesr[i].line[j + 1].line_position + 1) + ":\n"  + original_filer[i + 1] + "\n" + "OPERANDO NAO E UM NUMERO INTEIRO";
+                                erro = "ERRO LEXICO NA LINHA " + to_string(linesr[i].line[j + 1].line_position + 1) + ":\n"  + original_filer[linesr[i].line[j + 1].line_position] + "\n" + "OPERANDO NAO E UM NUMERO INTEIRO";
                                 errorsr.push_back(erro);
 
                             }

@@ -91,13 +91,13 @@ map <string, int> get_symbols_table(string filename_aux, vector <string > &error
 
             }*/
             
-            if (actual_line.line.front().is_label == false) { //presume-se que todas as linhas da seção de dados devem ter rótulos
+            /*if (actual_line.line.front().is_label == false) { //presume-se que todas as linhas da seção de dados devem ter rótulos
 
                 erro = "ERRO SINTATICO NA LINHA " + to_string(actual_line.line[i].line_position + 1) + ":\n"  + original_filer[i + 1] + "\n" + "NAO HA ROTULO NA LINHA DA SECAO DE DADOS";
                 errorsr.push_back(erro);
                 continue;
 
-            }
+            }*/
             while (actual_line.line.back().is_label == true) {  //para o caso de linhas que só contêm rótulos
         
                 if (getline(file, line)) {
