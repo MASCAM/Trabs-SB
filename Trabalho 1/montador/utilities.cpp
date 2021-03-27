@@ -74,6 +74,6 @@ vector <string > split(vector<string > sentences, string delimiter, int &foundr)
 
 bool is_number(const string s) { //função que retorna se a string especificada é um número
 
-    return (!s.empty() && s.find_first_not_of("0123456789") == string::npos);
+    return (!s.empty() && s.find_first_not_of("-0123456789") == string::npos);
 
 }

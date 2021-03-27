@@ -22,7 +22,7 @@ map <string, int> get_symbols_table(string filename_aux, vector <string > &error
     int i = 0;
     int PC = 0;
     //bool only_labels = false;
-    map <string, int> symbolsTable;
+    map <string, int> symbols_table;
     while (line != "SECTION TEXT") { //primeiro percorre-se a seção de texto
 
         getline(file, line);
@@ -67,7 +67,7 @@ map <string, int> get_symbols_table(string filename_aux, vector <string > &error
     line = "";
     i = 0;
     file.open(filename_aux);
-    while (line != "SECTION DATA") { //após a seção de texto percorre-se a seção de dados
+    while (line != "SECTION DATA" ) { //após a seção de texto percorre-se a seção de dados
 
         getline(file, line);
         i++;
@@ -120,6 +120,7 @@ map <string, int> get_symbols_table(string filename_aux, vector <string > &error
     }
     for (size_t j = 0; j < linesr.size(); j++) { //laço de repetição que irá construir a tabela de símbolos
 
+        linesr[j].PC = PC;
         line_of_words_t actual_line;
         actual_line = linesr[j];
         for (size_t l = 0; l < actual_line.line.size(); l++) {  //para todas as palavras de uma linha
@@ -128,7 +129,7 @@ map <string, int> get_symbols_table(string filename_aux, vector <string > &error
             if (actual_line.line[l].is_label == true) { //se for um rótulo
 
                 
-                if (symbolsTable.find(actual_line.line[l].word) != symbolsTable.end()) { //se está duplicado é erro
+                if (symbols_table.find(actual_line.line[l].word) != symbols_table.end()) { //se está duplicado é erro
 
 
                     erro = "ERRO SEMANTICO NA LINHA " + to_string(actual_line.line[l].line_position + 1) + ":\n"  + original_filer[actual_line.line[l].line_position] + "\n" + "SIMBOLO REDEFINIDO";
@@ -137,11 +138,11 @@ map <string, int> get_symbols_table(string filename_aux, vector <string > &error
 
                 } else {    //senão adiciona à tabela de símbolos com o PC atual
 
-                    symbolsTable[actual_line.line[l].word] = PC;
+                    symbols_table[actual_line.line[l].word] = PC;
 
                 }
 
-            } else { //caso não seja um róttulo
+            } else { //caso não seja um rótulo
 
                 if (instructions.find(actual_line.line[l].word) != instructions.end()) { //se existe na tabela de instruções
 
@@ -166,7 +167,7 @@ map <string, int> get_symbols_table(string filename_aux, vector <string > &error
         }
 
     }
-    return symbolsTable; //retorna a tabela de símbolos montada (map)
+    return symbols_table; //retorna a tabela de símbolos montada (map)
 
 }
 

@@ -1,6 +1,9 @@
 *.d
 !spec/*.d
 
+simulador.exe
+!spec/simulador.exe
+
 test.cpp
 !spec/test.cpp
 

@@ -3,10 +3,12 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "format_file.h"
 #include "utilities.h"
-#include "first_pass.h"
+#include "format_file.h"
 #include "define_word_class.h"
+#include "first_pass.h"
+#include "second_pass.h"
+
 
 int main(int argc, char *argv[]) {
     
@@ -30,11 +32,13 @@ int main(int argc, char *argv[]) {
 
             filename_aux = formatFile(filename, original_filer);
             map <string, int> symbols_table = get_symbols_table(filename_aux, errorsr, linesr, original_filer);
-            for (map<string, int>::const_iterator it = symbols_table.begin(); it != symbols_table.end(); ++it) {
+            /*for (map<string, int>::const_iterator it = symbols_table.begin(); it != symbols_table.end(); ++it) {
 
                 std::cout << it->first << " " << to_string(it->second) << "\n";
 
-            }
+            }*/
+            remove(filename_aux.c_str()); //deleta o arquivo auxiliar criado
+            string object_file_string = create_object_string(symbols_table, errorsr, linesr, original_filer);
             if (errorsr.size() > 0) {
 
                 for (size_t i = 0; i < errorsr.size(); i++) {
@@ -42,6 +46,16 @@ int main(int argc, char *argv[]) {
                     cout << errorsr[i] << endl << endl;
 
                 }
+
+            } else {
+
+                //cout << object_file_string << endl;
+                filename = filename.substr(0, filename.find(".asm"));
+                filename += ".obj";
+                //cout << filename << endl;
+                ofstream obj_file(filename);
+                obj_file << object_file_string << endl;
+                obj_file.close();
 
             }
             

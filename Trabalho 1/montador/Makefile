@@ -40,11 +40,11 @@ $(EXE): $(OBJ)
 	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 # Let's clean up the mess
-
+	rm	-f	*.d	*.o
 clean:
 	$(RM) $(EXE) $(OBJ) $(DEP)
-	rm	-f	*.d	*.o
 
 # Don't forget to include the dependency files to let make know when to recompile
 -include $(DEP)
+
 
