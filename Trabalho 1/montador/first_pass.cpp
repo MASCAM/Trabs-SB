@@ -25,8 +25,15 @@ map <string, int> get_symbols_table(string filename_aux, vector <string > &error
     map <string, int> symbols_table;
     while (line != "SECTION TEXT") { //primeiro percorre-se a seção de texto
 
-        getline(file, line);
-        i++;
+        if (getline(file, line)) {
+
+            i++;
+
+        } else {
+
+            break;
+
+        }
 
     }
     while (getline(file, line)) {
@@ -69,8 +76,16 @@ map <string, int> get_symbols_table(string filename_aux, vector <string > &error
     file.open(filename_aux);
     while (line != "SECTION DATA" ) { //após a seção de texto percorre-se a seção de dados
 
-        getline(file, line);
-        i++;
+        if (getline(file, line)) {
+
+            i++;
+
+        } else {
+
+            break;
+
+        }
+        
 
     }
     while (getline(file, line)) {

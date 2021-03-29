@@ -124,7 +124,7 @@ string create_object_string(map <string, int> symbols_table, vector <string > &e
 
                             } else {
 
-                                erro = "ERRO LEXICO NA LINHA " + to_string(linesr[i].line[j + 1].line_position + 1) + ":\n"  + original_filer[linesr[i].line[j + 1].line_position] + "\n" + "OPERANDO NAO E UM NUMERO INTEIRO";
+                                erro = "ERRO SINTATICO NA LINHA " + to_string(linesr[i].line[j + 1].line_position + 1) + ":\n"  + original_filer[linesr[i].line[j + 1].line_position] + "\n" + "TIPO INVALIDO DE OPERANDO, OPERANDO NAO E UM NUMERO INTEIRO";
                                 errorsr.push_back(erro);
 
                             }
@@ -170,6 +170,7 @@ string create_object_string(map <string, int> symbols_table, vector <string > &e
 
 vector <int > get_operation_code(map <string, int> symbols_table, vector <string > &errorsr, vector <string > &original_filer, vector <word_t > operation_words, int operation_number) {
 
+    //verifica possíveis erros e gera o código objeto para cada instrução da entrada
     int *found = new int;
     int &foundr = *found;
     foundr = 0;
@@ -190,13 +191,18 @@ vector <int > get_operation_code(map <string, int> symbols_table, vector <string
         case 2:
         case 3:
         case 4:
-            if (symbols_table.find(operation_words[0].word) != symbols_table.end()) { //se achou o símbolo na tabela
+            if (is_number(operation_words[0].word)) {
+
+                erro = "ERRO SINTATICO NA LINHA " + to_string(operation_words[0].line_position + 1) + ":\n"  + original_filer[operation_words[0].line_position] + "\n" + "TIPO INVALIDO DE OPERANDO, ESPERAVA-SE UM SIMBOLO E OBTEVE-SE UM NUMERO INTEIRO";
+                errorsr.push_back(erro);
+
+            } else if (symbols_table.find(operation_words[0].word) != symbols_table.end()) { //se achou o símbolo na tabela
 
                 operation_code.push_back(symbols_table[operation_words[0].word]);
 
             } else {
 
-                erro = "ERRO SEMANTICO NA LINHA " + to_string(operation_words[0].line_position + 1) + ":\n"  + original_filer[operation_words[0].line_position] + "\n" + "OPERANDO NAO E UM SIMBOLO VALIDO (NAO ENCONTRADO)";
+                erro = "ERRO SEMANTICO NA LINHA " + to_string(operation_words[0].line_position + 1) + ":\n"  + original_filer[operation_words[0].line_position] + "\n" + "OPERANDO NAO E UM SIMBOLO VALIDO (NAO DEFINIDO)";
                 errorsr.push_back(erro);
 
             }
@@ -206,13 +212,18 @@ vector <int > get_operation_code(map <string, int> symbols_table, vector <string
         case 6:
         case 7:
         case 8:
-            if (symbols_table.find(operation_words[0].word) != symbols_table.end()) { //se achou o símbolo na tabela
+            if (is_number(operation_words[0].word)) {
+
+                erro = "ERRO SINTATICO NA LINHA " + to_string(operation_words[0].line_position + 1) + ":\n"  + original_filer[operation_words[0].line_position] + "\n" + "TIPO INVALIDO DE OPERANDO, ESPERAVA-SE UM SIMBOLO E OBTEVE-SE UM NUMERO INTEIRO";
+                errorsr.push_back(erro);
+
+            } else if (symbols_table.find(operation_words[0].word) != symbols_table.end()) { //se achou o símbolo na tabela
 
                 operation_code.push_back(symbols_table[operation_words[0].word]);
 
             } else {
 
-                erro = "ERRO SEMANTICO NA LINHA " + to_string(operation_words[0].line_position + 1) + ":\n"  + original_filer[operation_words[0].line_position] + "\n" + "OPERANDO NAO E UM SIMBOLO VALIDO (NAO ENCONTRADO)";
+                erro = "ERRO SEMANTICO NA LINHA " + to_string(operation_words[0].line_position + 1) + ":\n"  + original_filer[operation_words[0].line_position] + "\n" + "OPERANDO NAO E UM SIMBOLO VALIDO (NAO DEFINIDO)";
                 errorsr.push_back(erro);
 
             }
@@ -230,16 +241,36 @@ vector <int > get_operation_code(map <string, int> symbols_table, vector <string
 
                 } else {
 
-                    if (symbols_table.find(words[0]) != symbols_table.end()) { //se achou o símbolo na tabela
+                    if (is_number(words[0])) {
 
-                        if (symbols_table.find(words[1]) != symbols_table.end()) { //se achou o símbolo na tabela
+                        erro = "ERRO SINTATICO NA LINHA " + to_string(operation_words[0].line_position + 1) + ":\n"  + original_filer[operation_words[0].line_position] + "\n" + "TIPO DO PRIMEIRO OPERANDO E INVALIDO, ESPERAVA-SE UM SIMBOLO E OBTEVE-SE UM NUMERO INTEIRO";
+                        errorsr.push_back(erro);
+
+                    } else if (symbols_table.find(words[0]) != symbols_table.end()) { //se achou o símbolo na tabela
+
+                        if (is_number(words[1])) {
+
+                            erro = "ERRO SINTATICO NA LINHA " + to_string(operation_words[0].line_position + 1) + ":\n"  + original_filer[operation_words[0].line_position] + "\n" + "TIPO DO SEGUNDO OPERANDO E INVALIDO, ESPERAVA-SE UM SIMBOLO E OBTEVE-SE UM NUMERO INTEIRO";
+                            errorsr.push_back(erro);
+
+                        } else if (symbols_table.find(words[1]) != symbols_table.end()) { //se achou o símbolo na tabela
 
                             operation_code.push_back(symbols_table[words[0]]);
                             operation_code.push_back(symbols_table[words[1]]);
 
-                        } 
+                        } else {
 
-                    } 
+                            erro = "ERRO SEMANTICO NA LINHA " + to_string(operation_words[0].line_position + 1) + ":\n"  + original_filer[operation_words[0].line_position] + "\n" + "SEGUNDO OPERANDO NAO E UM SIMBOLO VALIDO (NAO DEFINIDO)";
+                            errorsr.push_back(erro);
+
+                        }
+
+                    } else {
+
+                        erro = "ERRO SEMANTICO NA LINHA " + to_string(operation_words[0].line_position + 1) + ":\n"  + original_filer[operation_words[0].line_position] + "\n" + "PRIMEIRO OPERANDO NAO E UM SIMBOLO VALIDO (NAO DEFINIDO)";
+                        errorsr.push_back(erro);
+
+                    }
 
                 }
             
@@ -255,13 +286,18 @@ vector <int > get_operation_code(map <string, int> symbols_table, vector <string
         case 11:
         case 12:
         case 13:
-            if (symbols_table.find(operation_words[0].word) != symbols_table.end()) { //se achou o símbolo na tabela
+            if (is_number(operation_words[0].word)) {
+
+                erro = "ERRO SINTATICO NA LINHA " + to_string(operation_words[0].line_position + 1) + ":\n"  + original_filer[operation_words[0].line_position] + "\n" + "TIPO INVALIDO DE OPERANDO, ESPERAVA-SE UM SIMBOLO E OBTEVE-SE UM NUMERO INTEIRO";
+                errorsr.push_back(erro);
+
+            } else if (symbols_table.find(operation_words[0].word) != symbols_table.end()) { //se achou o símbolo na tabela
 
                 operation_code.push_back(symbols_table[operation_words[0].word]);
 
             } else {
 
-                erro = "ERRO SEMANTICO NA LINHA " + to_string(operation_words[0].line_position + 1) + ":\n"  + original_filer[operation_words[0].line_position] + "\n" + "OPERANDO NAO E UM SIMBOLO VALIDO (NAO ENCONTRADO)";
+                erro = "ERRO SEMANTICO NA LINHA " + to_string(operation_words[0].line_position + 1) + ":\n"  + original_filer[operation_words[0].line_position] + "\n" + "OPERANDO NAO E UM SIMBOLO VALIDO (NAO DEFINIDO)";
                 errorsr.push_back(erro);
 
             }
