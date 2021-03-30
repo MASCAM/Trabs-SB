@@ -92,6 +92,7 @@ void word_t::validate_word(int line_position, vector <string > &original_filer, 
 
         erro = "ERRO LEXICO NA LINHA " + to_string(line_position + 1) + ":\n"  + original_filer[line_position] + "\n" + "CARACTERE INVALIDO NO INICIO DA PALAVRA";
         errorsr.push_back(erro);
+        break;
 
       }
 
@@ -105,6 +106,7 @@ void word_t::validate_word(int line_position, vector <string > &original_filer, 
 
         erro = "ERRO LEXICO NA LINHA " + to_string(line_position + 1) + ":\n"  + original_filer[line_position] + "\n" + "CARACTERE INVALIDO NO MEIO DA PALAVRA";
         errorsr.push_back(erro);
+        break;
 
       }
 
