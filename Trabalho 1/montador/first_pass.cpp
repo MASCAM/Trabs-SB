@@ -171,7 +171,7 @@ map <string, int> get_symbols_table(string filename_aux, vector <string > &error
 
                 } else { //caso a instrução ou diretiva seja inválida é erro
 
-                    erro = "ERRO LEXICO NA LINHA " + to_string(actual_line.line[l].line_position + 1) + ":\n"  + original_filer[actual_line.line[l].line_position] + "\n" + "INSTRUCAO OU DIRETIVA INVALIDA";
+                    erro = "ERRO SINTATICO NA LINHA " + to_string(actual_line.line[l].line_position + 1) + ":\n"  + original_filer[actual_line.line[l].line_position] + "\n" + "INSTRUCAO OU DIRETIVA INVALIDA";
                     errorsr.push_back(erro);
                     break;
 
