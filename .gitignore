@@ -1,0 +1,16 @@
+*.d
+!spec/*.d
+
+simulador.exe
+!spec/simulador.exe
+
+test.cpp
+!spec/test.cpp
+
+*.o
+!spec/*.o
+
+montador.exe
+!spec/montador.exe
+
+input/
