@@ -9,7 +9,7 @@ using namespace std;
 
 
 
-string formatFile(string filename, vector <string > &original_filer, bool &multiple_files);
+string formatFile(string filename, vector <string > &original_filer, bool &multiple_files, vector <string > &errorsr, map <string, vector<int >> &symbols_tabler, map <string, int> &definitions_tabler);
 
 
 #endif

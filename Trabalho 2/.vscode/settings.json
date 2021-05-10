@@ -1,6 +1,13 @@
 {
     "files.associations": {
         "iostream": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "map": "cpp",
+        "vector": "cpp",
+        "string": "cpp",
+        "ostream": "cpp",
+        "xtree": "cpp",
+        "utility": "cpp",
+        "iosfwd": "cpp"
     }
 }

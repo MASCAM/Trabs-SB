@@ -11,7 +11,7 @@
 
 using namespace std;
 
-map <string, int> get_symbols_table(string filename_aux, vector <string > &errorsr, vector <line_of_words_t > &linesr, vector <string > &original_filer) {
+map <string, vector<int >> get_symbols_table(string filename_aux, vector <string > &errorsr, vector <line_of_words_t > &linesr, vector <string > &original_filer,  map <string, vector<int >> &symbols_tabler, map <string, int> &definitions_tabler) {
 
     fstream file;
     string line;
@@ -22,7 +22,6 @@ map <string, int> get_symbols_table(string filename_aux, vector <string > &error
     int i = 0;
     int PC = 0;
     //bool only_labels = false;
-    map <string, int> symbols_table;
     while (line != "SECTION TEXT") { //primeiro percorre-se a seção de texto
 
         if (getline(file, line)) {
@@ -144,7 +143,7 @@ map <string, int> get_symbols_table(string filename_aux, vector <string > &error
             if (actual_line.line[l].is_label == true) { //se for um rótulo
 
                 
-                if (symbols_table.find(actual_line.line[l].word) != symbols_table.end()) { //se está duplicado é erro
+                if (symbols_tabler.find(actual_line.line[l].word) != symbols_tabler.end()) { //se está duplicado é erro
 
 
                     erro = "ERRO SEMANTICO NA LINHA " + to_string(actual_line.line[l].line_position + 1) + ":\n"  + original_filer[actual_line.line[l].line_position] + "\n" + "SIMBOLO REDEFINIDO";
@@ -153,7 +152,12 @@ map <string, int> get_symbols_table(string filename_aux, vector <string > &error
 
                 } else {    //senão adiciona à tabela de símbolos com o PC atual
 
-                    symbols_table[actual_line.line[l].word] = PC;
+                    symbols_tabler[actual_line.line[l].word] = {PC, 0};
+                    if (definitions_tabler.find(actual_line.line[l].word) != definitions_tabler.end()) {
+
+                        definitions_tabler[actual_line.line[l].word] = PC;
+
+                    }
 
                 }
 
@@ -161,12 +165,12 @@ map <string, int> get_symbols_table(string filename_aux, vector <string > &error
 
                 if (instructions.find(actual_line.line[l].word) != instructions.end()) { //se existe na tabela de instruções
 
-                    PC += instructions[actual_line.line[l].word][1]; //adiciona na tabela de símbolos e incrementa o PC
+                    PC += instructions[actual_line.line[l].word][1]; //incrementa o PC
                     break;
 
                 } else if (directives.find(actual_line.line[l].word) != directives.end()) { //se existe na tabela de diretivas
 
-                    PC += directives[actual_line.line[l].word][1]; //adiciona na tabela de símbolos e incrementa o PC
+                    PC += directives[actual_line.line[l].word][1]; //incrementa o PC
                     break;
 
                 } else { //caso a instrução ou diretiva seja inválida é erro
@@ -183,7 +187,7 @@ map <string, int> get_symbols_table(string filename_aux, vector <string > &error
         }
 
     }
-    return symbols_table; //retorna a tabela de símbolos montada (map)
+    return symbols_tabler; //retorna a tabela de símbolos montada (map)
 
 }
 

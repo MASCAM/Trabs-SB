@@ -11,7 +11,7 @@
 
 using namespace std;
 
-string create_object_string(map <string, int> symbols_table, vector <string > &errorsr, vector <line_of_words_t > &linesr, vector <string > &original_filer) {
+string create_object_string(vector <string > &errorsr, vector <line_of_words_t > &linesr, vector <string > &original_filer, map <string, vector<int >> &symbols_tabler, map <string, vector<int >> &uses_tabler, string &realocatorr) {
 
     string object_string;
     vector <int > object_code;
@@ -34,7 +34,7 @@ string create_object_string(map <string, int> symbols_table, vector <string > &e
 
                 if (found_instruction == true) { //se achou a instrução
 
-                    vector <int > operation_code = get_operation_code(symbols_table, errorsr, original_filer, operation_words, operation_number);
+                    vector <int > operation_code = get_operation_code(symbols_tabler, errorsr, original_filer, operation_words, operation_number);
                     //a função acima gera um vetor com os códigos que serão passados para o arquivo objeto
                     for (size_t l = 0; l < operation_code.size(); l++) { //passa para o código objeto
 
@@ -52,6 +52,7 @@ string create_object_string(map <string, int> symbols_table, vector <string > &e
                         if (operation_number == 14) {
 
                             object_code.push_back(operation_number);
+                            realocatorr += "0";
                             break;
 
                         }
@@ -59,6 +60,11 @@ string create_object_string(map <string, int> symbols_table, vector <string > &e
                         if (operators_number == 2) { //se for copy
 
                             operators_number -= 1;  //decrementa o número de operandos, pois a palavra está emendada
+                            realocatorr += "011";
+
+                        } else {
+
+                            realocatorr += "01";
 
                         }
                         if (j + 1 + operators_number < linesr[i].line.size()) { //se houver mais operandos que o desejado
@@ -79,6 +85,24 @@ string create_object_string(map <string, int> symbols_table, vector <string > &e
                             while (k < linesr[i].line.size()) { //coloca o resto da linha num vetor pra ser tratado
 
                                 operation_words.push_back(linesr[i].line[k]);
+                                if (symbols_tabler.find(linesr[i].line[k].word) != symbols_tabler.end()) {
+
+                                    if (symbols_tabler[linesr[i].line[k].word][1] == 1) {
+
+                                        if (uses_tabler.find(linesr[i].line[k].word) != uses_tabler.end()) {
+
+                                            uses_tabler[linesr[i].line[k].word].push_back(linesr[i].PC + k);
+
+                                        } else {
+
+                                            int temp_var = linesr[i].PC + k;
+                                            uses_tabler[linesr[i].line[k].word] = { temp_var };
+
+                                        }
+
+                                    }
+
+                                }
                                 k++;
 
                             }
@@ -88,6 +112,7 @@ string create_object_string(map <string, int> symbols_table, vector <string > &e
 
                     } else if (directives.find(linesr[i].line[j].word) != directives.end()) { //se achou a diretiva
 
+                        realocatorr += "0";
                         if (directives[linesr[i].line[j].word][0] == 0) { //se for SPACE reserva 0 no codigo objeto
 
                             if (j + 1 < linesr[i].line.size()) { //se houver mais operandos que o desejado
@@ -168,7 +193,7 @@ string create_object_string(map <string, int> symbols_table, vector <string > &e
 
 }
 
-vector <int > get_operation_code(map <string, int> symbols_table, vector <string > &errorsr, vector <string > &original_filer, vector <word_t > operation_words, int operation_number) {
+vector <int > get_operation_code(map <string, vector<int >> symbols_tabler, vector <string > &errorsr, vector <string > &original_filer, vector <word_t > operation_words, int operation_number) {
 
     //verifica possíveis erros e gera o código objeto para cada instrução da entrada
     int *found = new int;
@@ -191,14 +216,15 @@ vector <int > get_operation_code(map <string, int> symbols_table, vector <string
         case 2:
         case 3:
         case 4:
+
             if (is_number(operation_words[0].word)) {
 
                 erro = "ERRO SINTATICO NA LINHA " + to_string(operation_words[0].line_position + 1) + ":\n"  + original_filer[operation_words[0].line_position] + "\n" + "TIPO INVALIDO DE OPERANDO, ESPERAVA-SE UM SIMBOLO E OBTEVE-SE UM NUMERO INTEIRO";
                 errorsr.push_back(erro);
 
-            } else if (symbols_table.find(operation_words[0].word) != symbols_table.end()) { //se achou o símbolo na tabela
+            } else if (symbols_tabler.find(operation_words[0].word) != symbols_tabler.end()) { //se achou o símbolo na tabela
 
-                operation_code.push_back(symbols_table[operation_words[0].word]);
+                operation_code.push_back(symbols_tabler[operation_words[0].word][0]);
 
             } else {
 
@@ -212,14 +238,15 @@ vector <int > get_operation_code(map <string, int> symbols_table, vector <string
         case 6:
         case 7:
         case 8:
+
             if (is_number(operation_words[0].word)) {
 
                 erro = "ERRO SINTATICO NA LINHA " + to_string(operation_words[0].line_position + 1) + ":\n"  + original_filer[operation_words[0].line_position] + "\n" + "TIPO INVALIDO DE OPERANDO, ESPERAVA-SE UM SIMBOLO E OBTEVE-SE UM NUMERO INTEIRO";
                 errorsr.push_back(erro);
 
-            } else if (symbols_table.find(operation_words[0].word) != symbols_table.end()) { //se achou o símbolo na tabela
+            } else if (symbols_tabler.find(operation_words[0].word) != symbols_tabler.end()) { //se achou o símbolo na tabela
 
-                operation_code.push_back(symbols_table[operation_words[0].word]);
+                operation_code.push_back(symbols_tabler[operation_words[0].word][0]);
 
             } else {
 
@@ -230,6 +257,7 @@ vector <int > get_operation_code(map <string, int> symbols_table, vector <string
             break;
 
         case 9:
+
             words.push_back(operation_words[0].word);
             words = split(words, ",", foundr);
             if (foundr > 0) {
@@ -246,17 +274,17 @@ vector <int > get_operation_code(map <string, int> symbols_table, vector <string
                         erro = "ERRO SINTATICO NA LINHA " + to_string(operation_words[0].line_position + 1) + ":\n"  + original_filer[operation_words[0].line_position] + "\n" + "TIPO DO PRIMEIRO OPERANDO E INVALIDO, ESPERAVA-SE UM SIMBOLO E OBTEVE-SE UM NUMERO INTEIRO";
                         errorsr.push_back(erro);
 
-                    } else if (symbols_table.find(words[0]) != symbols_table.end()) { //se achou o símbolo na tabela
+                    } else if (symbols_tabler.find(words[0]) != symbols_tabler.end()) { //se achou o símbolo na tabela
 
                         if (is_number(words[1])) {
 
                             erro = "ERRO SINTATICO NA LINHA " + to_string(operation_words[0].line_position + 1) + ":\n"  + original_filer[operation_words[0].line_position] + "\n" + "TIPO DO SEGUNDO OPERANDO E INVALIDO, ESPERAVA-SE UM SIMBOLO E OBTEVE-SE UM NUMERO INTEIRO";
                             errorsr.push_back(erro);
 
-                        } else if (symbols_table.find(words[1]) != symbols_table.end()) { //se achou o símbolo na tabela
+                        } else if (symbols_tabler.find(words[1]) != symbols_tabler.end()) { //se achou o símbolo na tabela
 
-                            operation_code.push_back(symbols_table[words[0]]);
-                            operation_code.push_back(symbols_table[words[1]]);
+                            operation_code.push_back(symbols_tabler[words[0]][0]);
+                            operation_code.push_back(symbols_tabler[words[1]][0]);
 
                         } else {
 
@@ -286,14 +314,15 @@ vector <int > get_operation_code(map <string, int> symbols_table, vector <string
         case 11:
         case 12:
         case 13:
+
             if (is_number(operation_words[0].word)) {
 
                 erro = "ERRO SINTATICO NA LINHA " + to_string(operation_words[0].line_position + 1) + ":\n"  + original_filer[operation_words[0].line_position] + "\n" + "TIPO INVALIDO DE OPERANDO, ESPERAVA-SE UM SIMBOLO E OBTEVE-SE UM NUMERO INTEIRO";
                 errorsr.push_back(erro);
 
-            } else if (symbols_table.find(operation_words[0].word) != symbols_table.end()) { //se achou o símbolo na tabela
+            } else if (symbols_tabler.find(operation_words[0].word) != symbols_tabler.end()) { //se achou o símbolo na tabela
 
-                operation_code.push_back(symbols_table[operation_words[0].word]);
+                operation_code.push_back(symbols_tabler[operation_words[0].word][0]);
 
             } else {
 
@@ -304,9 +333,11 @@ vector <int > get_operation_code(map <string, int> symbols_table, vector <string
             break;
 
         case 14:
+
             break;
 
         default:
+
             break;
 
     }

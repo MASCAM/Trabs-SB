@@ -34,7 +34,7 @@ map <string, vector<int>> get_directives_table() {
     map <string, vector<int>> directives;
     directives["SPACE"] = { 0, 1 };
     directives["CONST"] = { 1, 1 };
-    directives["PUBLIC"] = { 0, 0 };
+    directives["PUBLIC"] = { 1, 0 };
     directives["EXTERN"] = { 0, 0 };
     return directives;
 
