@@ -42,6 +42,7 @@ map <string, int> create_general_definitions_table(vector <string > &filenamer, 
     int *found = new int;
     int &foundr = *found;
     string line;
+    string realocator;
     map <string, int> correction_factors_table; 
     int correction_factor = 0;
     vector <string > aux = {};
@@ -64,17 +65,51 @@ map <string, int> create_general_definitions_table(vector <string > &filenamer, 
 
                 }*/
 
-                object_filenamer = aux[0];
+                object_filenamer = aux[0] + ".o";
                 //cout << object_filenamer << endl;
 
             }
-            //correction_factors_table
-            aux.push_back(split({ line }, "H: ", foundr)[1]);
+            correction_factors_table[aux[0]] = correction_factor;
+            aux.pop_back();
+            for (map<string, int>::const_iterator it2 = correction_factors_table.begin(); it2 != correction_factors_table.end(); ++it2) {
 
+                std::cout << it2->first << " " << to_string(it2->second) << "\n";
+
+            }
+            getline(file, line);
+            aux.push_back(split({ line }, "H: ", foundr)[1]);
+            correction_factor += atoi(aux[0].c_str());
+            aux.pop_back();
+            getline(file, line);
+            aux.push_back(split({ line }, "R: ", foundr)[1]);
+            realocator = aux[0];
+            cout << realocator << endl;
+            aux.pop_back();
+            foundr = 0;
+            getline(file, line);
+            aux = split({ line }, "D: ", foundr);
+            while (foundr <= 0) {
+
+                aux = {};
+                foundr = 0;
+                getline(file, line);
+                aux = split({ line }, "D: ", foundr);
+
+            }
+            while (foundr > 0) {
+
+                aux.erase(aux.begin());
+                aux = split(aux, " ", foundr);
+                //general_definitions_tabler[aux[0]] = 
+                aux = split({ line }, "D: ", foundr);
+
+            }
+            cout << aux[1] << endl;
+            file.close();
 
         }
 
-        file.close();
+        
 
     }
     return general_definitions_tabler;
