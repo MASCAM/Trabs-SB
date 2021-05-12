@@ -67,29 +67,38 @@ string create_final_object_string(vector <string > &filenamer, map <string, int>
             getline(file, line);
             aux = split({ line }, "D: ", foundr);
             global_uses_tabler.push_back(aux_map);
-            while (foundr <= 0 || aux[0].find_first_of("T: ") != string::npos) {
+            if (aux[0].find("T: ") == string::npos) {
 
-                foundr = 0;
-                aux = split({ line }, "U: ", foundr);
-                if (foundr > 0) {
+                //cout << "disney" << endl;
+                while (foundr <= 0 || aux[0].find("T: ") != string::npos) {
 
-                    aux.erase(aux.begin());
-                    aux = split(aux, " ", foundr);
-                    aux2 = aux[0];
-                    aux.erase(aux.begin());
-                    //cout << aux2 << endl;
-                    for (size_t j = 0; j < aux.size(); j++) {
+                    foundr = 0;
+                    aux = split({ line }, "U: ", foundr);
+                    if (foundr > 0) {
 
-                        //cout << aux[j] << endl;
-                        global_uses_tabler[i][aux2].push_back(atoi(aux[j].c_str()));
-                        //cout << to_string(global_uses_tabler[i][aux2][j]) << endl;
+                        aux.erase(aux.begin());
+                        aux = split(aux, " ", foundr);
+                        aux2 = aux[0];
+                        aux.erase(aux.begin());
+                        //cout << aux2 << endl;
+                        for (size_t j = 0; j < aux.size(); j++) {
+
+                            //cout << aux[j] << endl;
+                            global_uses_tabler[i][aux2].push_back(atoi(aux[j].c_str()));
+                            //cout << to_string(global_uses_tabler[i][aux2][j]) << endl;
+
+                        }
 
                     }
+                    foundr = 0;
+                    getline(file, line);
+                    aux = split({ line }, "D: ", foundr);
 
-                }
+                } 
+
+            } else {
+
                 foundr = 0;
-                getline(file, line);
-                aux = split({ line }, "D: ", foundr);
 
             }
             while (foundr > 0) {

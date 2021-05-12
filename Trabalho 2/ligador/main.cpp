@@ -22,9 +22,9 @@ int main(int argc, char *argv[]) {
     vector <vector <int >> &numbers_stringr = *numbers_string; 
     string filename_aux;
     vector <string > object_string = {};
-    if (argc < 3 || argc > 4) {
+    if (argc < 2 || argc > 4) {
 
-        cout << "Número de argumentos menor que 3 ou maior que 4 (sao aceitos 2 ou 3 arquivos de entrada)" << "\n";
+        cout << "Número de argumentos menor que 2 ou maior que 4 (sao aceitos 1, 2 ou 3 arquivos de entrada)" << "\n";
 
     } else {
 

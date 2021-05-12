@@ -158,8 +158,13 @@ int main(int argc, char *argv[]) {
                     } else {
 
                         filename = filename.substr(0, filename.find(".asm"));
-                        filename += ".obj";
+                        string title = filename;
+                        filename += ".o";
                         ofstream obj_file(filename);
+                        obj_file << "H: " + title << endl;
+                        obj_file << "H: " + to_string(realocatorr.size() - 3) << endl;
+                        obj_file << realocatorr << endl;
+                        object_file_string = "T: " + object_file_string;
                         obj_file << object_file_string << endl;
                         obj_file.close();
 
